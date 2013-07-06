@@ -4,7 +4,7 @@ go.leptonica wraps the leptonica library for "efficient image processing and ima
 
 ### Installation
 
-Install dependencies, this will only work if you have a recent version of debian/ubuntu.
+Install dependencies.
 ```
 sudo apt-get install autoconf automake libtool
 sudo apt-get install libpng12-dev
