@@ -1,4 +1,6 @@
 
+## go.leptonica
+go.leptonica wraps the leptonica library for "efficient image processing and image analysis operations".
 
 ### Installation
 
@@ -11,7 +13,7 @@ sudo apt-get install libtiff4-dev
 sudo apt-get install zlib1g-dev
 ```
 
-Download, make and install
+Download, configure, make and install
 ```
 wget http://leptonica.googlecode.com/files/leptonica-1.69.tar.gz
 tar zxvf leptonica-1.69.tar.gz
