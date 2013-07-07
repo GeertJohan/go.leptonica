@@ -3,7 +3,6 @@ package leptonica
 // #cgo LDFLAGS: -llept
 // #include "leptonica/allheaders.h"
 // #include <stdlib.h>
-// #include <stdio.h>
 import "C"
 import (
 	"errors"
@@ -11,7 +10,7 @@ import (
 )
 
 type Pix struct {
-	CPIX *C.PIX
+	CPIX *C.PIX // exported C.PIX so it can be used with other cgo wrap packages
 }
 
 // LEPT_DLL extern PIX * pixRead ( const char *filename );
@@ -27,5 +26,6 @@ func NewPixFromFile(filename string) (*Pix, error) {
 		return nil, errors.New("could not create PIX from given filename")
 	}
 
+	// all done
 	return &Pix{CPIX}, nil
 }
