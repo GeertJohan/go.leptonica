@@ -6,11 +6,7 @@ go.leptonica wraps the leptonica library for "efficient image processing and ima
 
 Install dependencies.
 ```
-sudo apt-get install autoconf automake libtool
-sudo apt-get install libpng12-dev
-sudo apt-get install libjpeg62-dev
-sudo apt-get install libtiff4-dev
-sudo apt-get install zlib1g-dev
+sudo apt-get install autoconf automake libtool libpng12-dev libjpeg62-dev libtiff4-dev zlib1g-dev
 ```
 
 Download, configure, make and install
