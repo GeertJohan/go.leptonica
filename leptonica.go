@@ -10,7 +10,11 @@ import (
 )
 
 type Pix struct {
-	CPIX *C.PIX // exported C.PIX so it can be used with other cgo wrap packages
+	cPix *C.PIX // exported C.PIX so it can be used with other cgo wrap packages
+}
+
+func (p *Pix) CPIX() *C.PIX {
+	return p.cPix
 }
 
 // LEPT_DLL extern PIX * pixRead ( const char *filename );
