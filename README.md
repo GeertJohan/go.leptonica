@@ -1,17 +1,14 @@
-
 ## go.leptonica
 go.leptonica wraps the leptonica library for "efficient image processing and image analysis operations".
 
 ### Installation
+go.leptonica requires the leptonica library and development headers to compile.
+Install following instructions below, then use `go get` to install go.leptonica.
 
-#### On Debian Wheezy 7 (or later)
+#### Debian Wheezy 7 (or later)
+`sudo apt-get install libleptonica-dev`
 
-apt-get install libleptonica-dev
-
-It's already at 1.69, so forget about the rest of this document.
-
-#### Elsewhere
-
+#### Manual installation
 Install dependencies.
 ```
 sudo apt-get install autoconf automake libtool libpng12-dev libjpeg62-dev libtiff4-dev zlib1g-dev
