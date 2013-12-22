@@ -22,10 +22,6 @@ func (p *Pix) CPIX() *C.PIX {
 	return p.cPix
 }
 
-func (p *Pix) Close() {
-	C.free(unsafe.Pointer(p.cPix))
-}
-
 // LEPT_DLL extern PIX * pixRead ( const char *filename );
 
 // NewPixFromFile creates a new Pix from given filename
