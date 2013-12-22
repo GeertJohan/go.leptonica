@@ -11,15 +11,27 @@ l_uint8* uglycast(void* value) { return (l_uint8*)value; }
 import "C"
 import (
 	"errors"
+	"sync"
 	"unsafe"
 )
 
 type Pix struct {
-	cPix *C.PIX // exported C.PIX so it can be used with other cgo wrap packages
+	cPix   *C.PIX // exported C.PIX so it can be used with other cgo wrap packages
+	closed bool
+	lock   sync.Mutex
 }
 
 func (p *Pix) CPIX() *C.PIX {
 	return p.cPix
+}
+
+func (p *Pix) Close() {
+	p.lock.Lock
+	defer p.lock.Unlock()
+	if !p.closed {
+		C.free(unsafe.Pointer(p.cPix))
+		p.closed = true
+	}
 }
 
 // LEPT_DLL extern PIX * pixRead ( const char *filename );
