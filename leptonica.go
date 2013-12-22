@@ -29,6 +29,8 @@ func (p *Pix) Close() {
 	p.lock.Lock()
 	defer p.lock.Unlock()
 	if !p.closed {
+		// LEPT_DLL extern void pixDestroy ( PIX **ppix );
+		C.pixDestroy(&p.cPix)
 		C.free(unsafe.Pointer(p.cPix))
 		p.closed = true
 	}
