@@ -26,7 +26,7 @@ func (p *Pix) CPIX() *C.PIX {
 }
 
 func (p *Pix) Close() {
-	p.lock.Lock
+	p.lock.Lock()
 	defer p.lock.Unlock()
 	if !p.closed {
 		C.free(unsafe.Pointer(p.cPix))
@@ -48,7 +48,10 @@ func NewPixFromFile(filename string) (*Pix, error) {
 	}
 
 	// all done
-	return &Pix{CPIX}, nil
+	pix := &Pix{
+		cPix: CPIX,
+	}
+	return pix, nil
 }
 
 // NewPixReadMem creates a new Pix instance from a byte array
@@ -59,5 +62,8 @@ func NewPixReadMem(image *[]byte) (*Pix, error) {
 	if CPIX == nil {
 		return nil, errors.New("Cannot create PIX from given image data")
 	}
-	return &Pix{CPIX}, nil
+	pix := &Pix{
+		cPix: CPIX,
+	}
+	return pix, nil
 }
