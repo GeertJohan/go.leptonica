@@ -25,6 +25,19 @@ func (p *Pix) CPIX() *C.PIX {
 	return p.cPix
 }
 
+func (p *Pix) GetDimensions() (int32, int32, int32) {
+	p.lock.Lock()
+	defer p.lock.Unlock()
+	var w, h, d int32
+	cW := C.l_int32(w)
+	cH := C.l_int32(h)
+	cD := C.l_int32(d)
+	if !p.closed {
+		C.pixGetDimensions(p.cPix, &cW, &cH, &cD)
+	}
+	return int32(cW), int32(cH), int32(cD)
+}
+
 func (p *Pix) Close() {
 	p.lock.Lock()
 	defer p.lock.Unlock()
