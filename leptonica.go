@@ -11,8 +11,33 @@ l_uint8* uglycast(void* value) { return (l_uint8*)value; }
 import "C"
 import (
 	"errors"
+	"strconv"
 	"sync"
 	"unsafe"
+)
+
+type ImageType int32
+
+const (
+	UNKNOWN ImageType = iota
+	BMP
+	JFIF_JPEG
+	PNG
+	TIFF
+	TIFF_PACKBITS
+	TIFF_RLE
+	TIFF_G3
+	TIFF_G4
+	TIFF_LZW
+	TIFF_ZIP
+	PNM
+	PS
+	GIF
+	JP2
+	WEBP
+	LPDF
+	DEFAULT
+	SPIX
 )
 
 type Pix struct {
@@ -25,7 +50,7 @@ func (p *Pix) CPIX() *C.PIX {
 	return p.cPix
 }
 
-func (p *Pix) GetDimensions() (int32, int32, int32) {
+func (p *Pix) GetDimensions() (int32, int32, int32, error) {
 	p.lock.Lock()
 	defer p.lock.Unlock()
 	var w, h, d int32
@@ -33,9 +58,13 @@ func (p *Pix) GetDimensions() (int32, int32, int32) {
 	cH := C.l_int32(h)
 	cD := C.l_int32(d)
 	if !p.closed {
-		C.pixGetDimensions(p.cPix, &cW, &cH, &cD)
+		code := C.pixGetDimensions(p.cPix, &cW, &cH, &cD)
+		if code != 0 {
+			return 0, 0, 0, errors.New("could not get dimensions")
+		}
+
 	}
-	return int32(cW), int32(cH), int32(cD)
+	return int32(cW), int32(cH), int32(cD), nil
 }
 
 func (p *Pix) Close() {
@@ -50,7 +79,22 @@ func (p *Pix) Close() {
 }
 
 // LEPT_DLL extern PIX * pixRead ( const char *filename );
+// NewPixFromFile creates a new Pix from given filename
+func (p *Pix) WriteFile(filename string, format ImageType) error {
+	cFilename := C.CString(filename)
+	defer C.free(unsafe.Pointer(cFilename))
+	cFormat := C.l_int32(format)
 
+	// create new PIX
+	code := C.pixWrite(cFilename, p.cPix, cFormat)
+	if code != 0 {
+		return errors.New("could not write PIX to given filename: " + filename + " (format: " + strconv.Itoa(int(format)) + ")")
+	}
+
+	return nil
+}
+
+// LEPT_DLL extern PIX * pixRead ( const char *filename );
 // NewPixFromFile creates a new Pix from given filename
 func NewPixFromFile(filename string) (*Pix, error) {
 	cFilename := C.CString(filename)
