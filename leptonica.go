@@ -50,6 +50,7 @@ func (p *Pix) CPIX() *C.PIX {
 	return p.cPix
 }
 
+// GetDimensions returns the dimensions in Width, Height, Depth, Error format
 func (p *Pix) GetDimensions() (int32, int32, int32, error) {
 	p.lock.Lock()
 	defer p.lock.Unlock()
@@ -78,8 +79,7 @@ func (p *Pix) Close() {
 	}
 }
 
-// LEPT_DLL extern PIX * pixRead ( const char *filename );
-// NewPixFromFile creates a new Pix from given filename
+// WriteFile saves to disk the current pix in the given format
 func (p *Pix) WriteFile(filename string, format ImageType) error {
 	cFilename := C.CString(filename)
 	defer C.free(unsafe.Pointer(cFilename))
