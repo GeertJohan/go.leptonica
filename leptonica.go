@@ -95,7 +95,7 @@ func (p *Pix) WriteFile(filename string, format ImageType) error {
 }
 
 // WriteBytes will return a pointer to a byte array holding the data from PIX in the given format
-func (p *Pix) WriteBytes(format ImageType) (*[]byte, error) {
+func (p *Pix) WriteBytes(format ImageType) ([]byte, error) {
 	var memory []byte
 	memPtr := C.uglycast(unsafe.Pointer(&(memory)))
 	var i int64
@@ -108,7 +108,7 @@ func (p *Pix) WriteBytes(format ImageType) (*[]byte, error) {
 	}
 	data := C.GoBytes(unsafe.Pointer(memPtr), C.int(sizePtr))
 	C.free(unsafe.Pointer(memPtr))
-	return &data, nil
+	return data, nil
 }
 
 // LEPT_DLL extern PIX * pixRead ( const char *filename );
