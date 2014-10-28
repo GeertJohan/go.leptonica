@@ -94,17 +94,16 @@ func (p *Pix) WriteFile(filename string, format ImageType) error {
 	return nil
 }
 
-// WriteBytes will return a pointer to a byte array holding the data from PIX in the given format
-func (p *Pix) WriteBytes(format ImageType) ([]byte, error) {
+// EncodedBytes will return a byte array holding the data from PIX in the given format
+func (p *Pix) EncodedBytes(format ImageType) ([]byte, error) {
 	var memory []byte
 	memPtr := C.uglycast(unsafe.Pointer(&(memory)))
 	var i int64
-	// TODO: Do I need to free this?
 	sizePtr := C.size_t(i)
 	cFormat := C.l_int32(format)
 	code := C.pixWriteMem(&memPtr, &sizePtr, p.cPix, cFormat)
 	if code != 0 {
-		return nil, errors.New("Cannot write type to given memory space")
+		return nil, errors.New("Cannot write type to given memory.  WriteMem returned: " + strconv.Itoa(int(code)))
 	}
 	data := C.GoBytes(unsafe.Pointer(memPtr), C.int(sizePtr))
 	C.free(unsafe.Pointer(memPtr))
