@@ -94,6 +94,22 @@ func (p *Pix) WriteFile(filename string, format ImageType) error {
 	return nil
 }
 
+// EncodedBytes will return a byte array holding the data from PIX in the given format
+func (p *Pix) EncodedBytes(format ImageType) ([]byte, error) {
+	var memory []byte
+	memPtr := C.uglycast(unsafe.Pointer(&(memory)))
+	var i int64
+	sizePtr := C.size_t(i)
+	cFormat := C.l_int32(format)
+	code := C.pixWriteMem(&memPtr, &sizePtr, p.cPix, cFormat)
+	if code != 0 {
+		return nil, errors.New("Cannot write type to given memory.  WriteMem returned: " + strconv.Itoa(int(code)))
+	}
+	data := C.GoBytes(unsafe.Pointer(memPtr), C.int(sizePtr))
+	C.free(unsafe.Pointer(memPtr))
+	return data, nil
+}
+
 // LEPT_DLL extern PIX * pixRead ( const char *filename );
 // NewPixFromFile creates a new Pix from given filename
 func NewPixFromFile(filename string) (*Pix, error) {
